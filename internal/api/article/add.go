@@ -1,6 +1,7 @@
 package article
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +23,7 @@ func (dto *AddArticleRequestDTO) Validate() error {
 }
 
 type addArticleRepository interface {
-	AddArticle(article AddArticleRequestDTO) (string, error)
+	AddArticle(context.Context, AddArticleRequestDTO) (string, error)
 }
 
 func AddArticleHandler(articleRepo addArticleRepository) gin.HandlerFunc {
@@ -32,7 +33,7 @@ func AddArticleHandler(articleRepo addArticleRepository) gin.HandlerFunc {
 			return
 		}
 
-		articleID, err := articleRepo.AddArticle(payload)
+		articleID, err := articleRepo.AddArticle(c, payload)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ErrResponse(http.StatusInternalServerError, err))
 			return

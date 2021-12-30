@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,9 +9,9 @@ import (
 )
 
 type ArticleRepository interface {
-	AddArticle(article article.AddArticleRequestDTO) (string, error)
-	GetArticles() ([]article.GetArticleResponse, error)
-	GetArticleByID(int) (article.GetArticleResponse, error)
+	AddArticle(context.Context, article.AddArticleRequestDTO) (string, error)
+	GetArticles(context.Context) ([]article.GetArticleResponse, error)
+	GetArticleByID(context.Context, string) (article.GetArticleResponse, error)
 }
 
 func NewHandler(articleRepo ArticleRepository) http.Handler {

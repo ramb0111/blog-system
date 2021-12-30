@@ -7,7 +7,7 @@ type Response struct {
 }
 
 const (
-	SUCCESS = "SUCCESS"
+	SUCCESS = "Success"
 )
 
 func ErrResponse(code int, err error) Response {

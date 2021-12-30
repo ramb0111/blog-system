@@ -1,8 +1,8 @@
 package article
 
 import (
+	"context"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,38 +15,33 @@ type GetArticleResponse struct {
 }
 
 type getArticleRepository interface {
-	GetArticles() ([]GetArticleResponse, error)
-	GetArticleByID(int) (GetArticleResponse, error)
+	GetArticles(context.Context) ([]GetArticleResponse, error)
+	GetArticleByID(context.Context, string) (GetArticleResponse, error)
 }
 
 func GetArticlesHandler(articleRepo getArticleRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		articles, err := articleRepo.GetArticles()
+		articles, err := articleRepo.GetArticles(c)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ErrResponse(http.StatusInternalServerError, err))
 			return
 		}
 
-		c.JSON(http.StatusCreated, SuccessResponse(http.StatusCreated, articles))
+		c.JSON(http.StatusOK, SuccessResponse(http.StatusOK, articles))
 	}
 }
 
 func GetArticlesByIDHandler(articleRepo getArticleRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		idStr := c.Param("id")
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, ErrResponse(http.StatusBadRequest, err))
-			return
-		}
-		article, err := articleRepo.GetArticleByID(id)
+		id := c.Param("id")
+		article, err := articleRepo.GetArticleByID(c, id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, ErrResponse(http.StatusInternalServerError, err))
 			return
 		}
 
 		articles := []GetArticleResponse{article}
-		c.JSON(http.StatusCreated, SuccessResponse(http.StatusCreated, articles))
+		c.JSON(http.StatusOK, SuccessResponse(http.StatusOK, articles))
 	}
 }

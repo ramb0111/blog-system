@@ -49,13 +49,13 @@ func (r *Repository) AddArticle(ctx context.Context, article api_article.AddArti
 	return articleDAO.ID, nil
 }
 
-func (r *Repository) GetArticle(ctx context.Context, ID string) (*api_article.GetArticleResponse, error) {
+func (r *Repository) GetArticleByID(ctx context.Context, ID string) (api_article.GetArticleResponse, error) {
 	var articleDAO articleDAO
 	if err := r.table.Get("ID", ID).OneWithContext(ctx, &articleDAO); err != nil {
-		return nil, err
+		return api_article.GetArticleResponse{}, err
 	}
 
-	return &api_article.GetArticleResponse{
+	return api_article.GetArticleResponse{
 		ID:      articleDAO.ID,
 		Author:  articleDAO.Author,
 		Title:   articleDAO.Title,
@@ -63,7 +63,7 @@ func (r *Repository) GetArticle(ctx context.Context, ID string) (*api_article.Ge
 	}, nil
 }
 
-func (r *Repository) GetArticles(ctx context.Context) (*[]api_article.GetArticleResponse, error) {
+func (r *Repository) GetArticles(ctx context.Context) ([]api_article.GetArticleResponse, error) {
 	var articlesDAO []articleDAO
 	if err := r.table.Scan().AllWithContext(ctx, &articlesDAO); err != nil {
 		return nil, err
@@ -79,5 +79,5 @@ func (r *Repository) GetArticles(ctx context.Context) (*[]api_article.GetArticle
 		})
 	}
 
-	return &articlesDTO, nil
+	return articlesDTO, nil
 }
