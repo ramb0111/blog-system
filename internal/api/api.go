@@ -8,9 +8,9 @@ import (
 )
 
 type ArticleRepository interface {
-	AddArticle(article article.AddArticleRequestDTO) (int, error)
-	GetArticles() ([]article.GetArticleReponse, error)
-	GetArticleByID(int) (article.GetArticleReponse, error)
+	AddArticle(article article.AddArticleRequestDTO) (string, error)
+	GetArticles() ([]article.GetArticleResponse, error)
+	GetArticleByID(int) (article.GetArticleResponse, error)
 }
 
 func NewHandler(articleRepo ArticleRepository) http.Handler {

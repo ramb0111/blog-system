@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetArticleReponse struct {
+type GetArticleResponse struct {
 	ID      string `json:"id"`
 	Title   string `json:"title"`
 	Content string `json:"content"`
@@ -15,8 +15,8 @@ type GetArticleReponse struct {
 }
 
 type getArticleRepository interface {
-	GetArticles() ([]GetArticleReponse, error)
-	GetArticleByID(int) (GetArticleReponse, error)
+	GetArticles() ([]GetArticleResponse, error)
+	GetArticleByID(int) (GetArticleResponse, error)
 }
 
 func GetArticlesHandler(articleRepo getArticleRepository) gin.HandlerFunc {
@@ -46,7 +46,7 @@ func GetArticlesByIDHandler(articleRepo getArticleRepository) gin.HandlerFunc {
 			return
 		}
 
-		articles := []GetArticleReponse{article}
+		articles := []GetArticleResponse{article}
 		c.JSON(http.StatusCreated, SuccessResponse(http.StatusCreated, articles))
 	}
 }

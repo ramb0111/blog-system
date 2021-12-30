@@ -22,7 +22,7 @@ func (dto *AddArticleRequestDTO) Validate() error {
 }
 
 type addArticleRepository interface {
-	AddArticle(article AddArticleRequestDTO) (int, error)
+	AddArticle(article AddArticleRequestDTO) (string, error)
 }
 
 func AddArticleHandler(articleRepo addArticleRepository) gin.HandlerFunc {
@@ -39,7 +39,7 @@ func AddArticleHandler(articleRepo addArticleRepository) gin.HandlerFunc {
 		}
 
 		articleResp := struct {
-			ID int `json:"id"`
+			ID string `json:"id"`
 		}{ID: articleID}
 
 		c.JSON(http.StatusCreated, SuccessResponse(http.StatusCreated, articleResp))
