@@ -1,0 +1,10 @@
+UNIT_TEST_DIR=$(shell go list ./... | grep -v /server | grep -v /cmd)
+
+run:
+	@docker-compose build
+	@docker-compose up
+
+test:
+	go get gotest.tools/gotestsum
+	gotestsum --jsonfile report.json -- -coverprofile=coverage.out -race -v ${UNIT_TEST_DIR}
+	go mod tidy
