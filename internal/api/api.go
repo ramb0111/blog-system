@@ -14,6 +14,7 @@ type ArticleRepository interface {
 	GetArticleByID(context.Context, string) (article.GetArticleResponse, error)
 }
 
+// NewHandler to includes article handlers
 func NewHandler(articleRepo ArticleRepository) http.Handler {
 	engine := gin.Default()
 	engine.GET("/articles/:id", article.GetArticlesByIDHandler(articleRepo))

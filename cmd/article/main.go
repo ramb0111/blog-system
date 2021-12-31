@@ -27,6 +27,5 @@ func main() {
 			WithRegion("us-east-1").
 			WithCredentials(credentials.NewStaticCredentials(AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY_SECRET, "")),
 	)
-	svc := server.NewServer(api.NewHandler(repository.NewRepository(db)), "")
-	svc.Serve()
+	server.NewServer(api.NewHandler(repository.NewRepository(db)), "").Serve()
 }

@@ -14,12 +14,11 @@ type GetArticleResponse struct {
 	Author  string `json:"author"`
 }
 
-type getArticleRepository interface {
+type getArticlesRepository interface {
 	GetArticles(context.Context) ([]GetArticleResponse, error)
-	GetArticleByID(context.Context, string) (GetArticleResponse, error)
 }
 
-func GetArticlesHandler(articleRepo getArticleRepository) gin.HandlerFunc {
+func GetArticlesHandler(articleRepo getArticlesRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		articles, err := articleRepo.GetArticles(c)
@@ -30,6 +29,10 @@ func GetArticlesHandler(articleRepo getArticleRepository) gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, SuccessResponse(http.StatusOK, articles))
 	}
+}
+
+type getArticleRepository interface {
+	GetArticleByID(context.Context, string) (GetArticleResponse, error)
 }
 
 func GetArticlesByIDHandler(articleRepo getArticleRepository) gin.HandlerFunc {

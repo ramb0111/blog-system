@@ -1,8 +1,9 @@
-UNIT_TEST_DIR=$(shell go list ./... | grep -v /server | grep -v /cmd)
+UNIT_TEST_DIR=$(shell go list ./... | grep -v /server | grep -v /cmd )
 
-run:
+run: test
 	@docker-compose build
 	@docker-compose up
+
 
 test:
 	go get gotest.tools/gotestsum

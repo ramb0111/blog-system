@@ -15,6 +15,7 @@ type Server struct {
 	http.Server
 }
 
+// NewServer to create a new server instance, should be followed by Serve
 func NewServer(handler http.Handler, port string) *Server {
 	if port == "" {
 		port = "8080"
@@ -28,6 +29,7 @@ func NewServer(handler http.Handler, port string) *Server {
 	}
 }
 
+// Serve to run all server endpoints
 func (s *Server) Serve() {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)

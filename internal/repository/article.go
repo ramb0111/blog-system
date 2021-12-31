@@ -28,6 +28,7 @@ type Repository struct {
 	now func() time.Time
 }
 
+//To create a new article db instance for performing db operations
 func NewRepository(db *dynamo.DB) *Repository {
 	if err := db.CreateTable(ArticleTableName, ArticleDAO{}).Run(); err != nil {
 		panic(err)
@@ -40,6 +41,7 @@ func NewRepository(db *dynamo.DB) *Repository {
 	}
 }
 
+// AddArticle to add article instance into db
 func (r *Repository) AddArticle(ctx context.Context, article api_article.AddArticleRequestDTO) (string, error) {
 	articleDAO := ArticleDAO{
 		ID:      uuid.New().String(),
@@ -53,6 +55,7 @@ func (r *Repository) AddArticle(ctx context.Context, article api_article.AddArti
 	return articleDAO.ID, nil
 }
 
+// GetArticleByID to get article by given ID from db
 func (r *Repository) GetArticleByID(ctx context.Context, ID string) (api_article.GetArticleResponse, error) {
 	var articleDAO ArticleDAO
 	if err := r.table.Get("ID", ID).OneWithContext(ctx, &articleDAO); err != nil {
@@ -67,6 +70,7 @@ func (r *Repository) GetArticleByID(ctx context.Context, ID string) (api_article
 	}, nil
 }
 
+// GetArticles to get all the articles from db
 func (r *Repository) GetArticles(ctx context.Context) ([]api_article.GetArticleResponse, error) {
 	var articlesDAO []ArticleDAO
 	if err := r.table.Scan().AllWithContext(ctx, &articlesDAO); err != nil {
