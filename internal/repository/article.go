@@ -13,8 +13,8 @@ const (
 	ArticleTableName = "article"
 )
 
-type articleDAO struct {
-	ID string
+type ArticleDAO struct {
+	ID string `dynamo:"ID,hash"`
 
 	Title   string
 	Content string
@@ -29,6 +29,10 @@ type Repository struct {
 }
 
 func NewRepository(db *dynamo.DB) *Repository {
+	if err := db.CreateTable(ArticleTableName, ArticleDAO{}).Run(); err != nil {
+		panic(err)
+	}
+
 	return &Repository{
 		db:    db,
 		table: db.Table(ArticleTableName),
@@ -37,7 +41,7 @@ func NewRepository(db *dynamo.DB) *Repository {
 }
 
 func (r *Repository) AddArticle(ctx context.Context, article api_article.AddArticleRequestDTO) (string, error) {
-	articleDAO := articleDAO{
+	articleDAO := ArticleDAO{
 		ID:      uuid.New().String(),
 		Author:  article.Author,
 		Title:   article.Title,
@@ -50,7 +54,7 @@ func (r *Repository) AddArticle(ctx context.Context, article api_article.AddArti
 }
 
 func (r *Repository) GetArticleByID(ctx context.Context, ID string) (api_article.GetArticleResponse, error) {
-	var articleDAO articleDAO
+	var articleDAO ArticleDAO
 	if err := r.table.Get("ID", ID).OneWithContext(ctx, &articleDAO); err != nil {
 		return api_article.GetArticleResponse{}, err
 	}
@@ -64,7 +68,7 @@ func (r *Repository) GetArticleByID(ctx context.Context, ID string) (api_article
 }
 
 func (r *Repository) GetArticles(ctx context.Context) ([]api_article.GetArticleResponse, error) {
-	var articlesDAO []articleDAO
+	var articlesDAO []ArticleDAO
 	if err := r.table.Scan().AllWithContext(ctx, &articlesDAO); err != nil {
 		return nil, err
 	}
