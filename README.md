@@ -10,6 +10,11 @@ make run
 ```
 | Note: make run will execute the test cases first
 
+## Host to connect
+```
+localhost:8080
+```
+
 
 ## To enable debugging 
 uncomment this line `// WithLogLevel(aws.LogDebugWithHTTPBody).`
