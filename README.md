@@ -8,12 +8,8 @@ Project Layout - https://github.com/golang-standards/project-layout
 ```
 make run
 ```
-| Note: make run will execute test cases first
+| Note: make run will execute the test cases first
 
-## To Test the app
-```
-make test
-```
 
 ## To enable debugging 
 uncomment this line `// WithLogLevel(aws.LogDebugWithHTTPBody).`
