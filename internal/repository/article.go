@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/dynamo"
@@ -22,22 +21,21 @@ type ArticleDAO struct {
 }
 
 type Repository struct {
-	db    *dynamo.DB
 	table dynamo.Table
-
-	now func() time.Time
 }
 
-//To create a new article db instance for performing db operations
-func NewRepository(db *dynamo.DB) *Repository {
-	if err := db.CreateTable(ArticleTableName, ArticleDAO{}).Run(); err != nil {
+type CreateTableI interface {
+	Run() error
+}
+
+//To create a new article table for performing db operations
+func NewRepository(db *dynamo.DB, createTable func(name string, from interface{}) CreateTableI) *Repository {
+	if err := createTable(ArticleTableName, ArticleDAO{}).Run(); err != nil {
 		panic(err)
 	}
 
 	return &Repository{
-		db:    db,
 		table: db.Table(ArticleTableName),
-		now:   time.Now,
 	}
 }
 
@@ -49,6 +47,7 @@ func (r *Repository) AddArticle(ctx context.Context, article api_article.AddArti
 		Title:   article.Title,
 		Content: article.Content,
 	}
+
 	if err := r.table.Put(&articleDAO).If("attribute_not_exists(ID)").RunWithContext(ctx); err != nil {
 		return "", err
 	}

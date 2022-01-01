@@ -8,6 +8,7 @@ require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/google/uuid v1.3.0
 	github.com/guregu/dynamo v1.11.0
+	github.com/gusaul/go-dynamock v0.0.0-20210107061312-3e989056e1e6
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
 )

@@ -22,10 +22,15 @@ func main() {
 	sess := session.Must(session.NewSession())
 	db := dynamo.New(sess,
 		aws.NewConfig().
-			WithLogLevel(aws.LogDebugWithHTTPBody).
+			// To enable debugging
+			// WithLogLevel(aws.LogDebugWithHTTPBody).
 			WithEndpoint(DYNAMO_DB_ENDPOINT).
 			WithRegion("us-east-1").
 			WithCredentials(credentials.NewStaticCredentials(AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY_SECRET, "")),
 	)
-	server.NewServer(api.NewHandler(repository.NewRepository(db)), "").Serve()
+
+	createTable := func(name string, from interface{}) repository.CreateTableI {
+		return db.CreateTable(name, from)
+	}
+	server.NewServer(api.NewHandler(repository.NewRepository(db, createTable)), "").Serve()
 }
